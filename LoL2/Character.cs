@@ -2,20 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
+using Raylib_cs;
 
 namespace NovemberProjekt.LoL2
 {
 	public class Character
 	{
-		Vector2 position;
 		int damage;
-		int hp;
-		Vector2 spawnPos;
+		protected Vector2 spawnPos;
 		int moveSpeed;
-		static List<Character> list = new List<Character>();
+
+		public int HP { get; set; } 
+		public Vector2 Position;
+		public Color graphic;
+		
+		public static List<Character> list = new List<Character>();
 
 		public Character()
 		{
+			// Graphic = new Color(222, 224, 92, 1);
 			list.Add(this);
 		}
 
@@ -23,9 +28,9 @@ namespace NovemberProjekt.LoL2
 		{
 			
 		}
+		public virtual void Inputs()
+		{
 
-		public int HP { get; set; } 
-
-		public Vector2 Position { get; set; }
+		}
 	}
 }

@@ -1,16 +1,23 @@
 ﻿using System;
 using Raylib_cs;
 
-namespace LoL2
+namespace NovemberProjekt.LoL2
 {
     class Program
     {
         static void Main(string[] args)
         {
+            Map aram = new Map();
+            Champion ezreal = new Champion();
+            
+            Raylib.InitWindow(aram.xMax, aram.yMax, "Bruh of Bruhhhhhhing");
             
             while (!Raylib.WindowShouldClose())
             {
                 Raylib.BeginDrawing();
+                
+                aram.Draw(Champion.list);
+
 
                 Raylib.EndDrawing();
             }

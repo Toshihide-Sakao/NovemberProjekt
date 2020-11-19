@@ -8,49 +8,59 @@ namespace NovemberProjekt.LoL2
 {
     public class Map
     {
-        Vector2 maxLengths;
-        int[,] map;
-        Color backgroundColor = new Color(207, 167, 89, 1);
+        Vector2 max;
+        Color backgroundColor = new Color(76, 151, 217, 1);
 
         public void Draw()
         {
-            Raylib.ClearBackground(backgroundColor);
-
-            for (int y = 0; y < maxLengths.Y; y++)
-            {
-                for (int x = 0; x < maxLengths.X; x++)
-                {
-
-                }
-            }
+            
         }
+
         public Map()
         {
-
+            max.X = 800;
+            max.Y = 800;
         }
 
-        public Map(List<Character> charList)
+        public void Draw(List<Character> charList) 
         {
-            setMap(charList);
+            drawMain();
+
+            for (int i = 0; i < charList.Count; i++)
+            {
+                drawCharacter(charList[i]);
+            }
+        }
+
+        void drawMain()
+        {
+            Raylib.ClearBackground(backgroundColor);
+            Raylib.DrawRectangle(0, 0, 800, 250, Color.BROWN);
+            Raylib.DrawRectangle(0, 550, 800, 250, Color.BROWN);
+        }
+
+        void drawCharacter(Character guy)
+        {
+            Raylib.DrawCircle((int)guy.Position.X, (int)guy.Position.Y, 20, Color.YELLOW);
+
+            guy.Inputs();
         }
 
         private void setMap(List<Character> charList)
         {
-            map = new int[(int)maxLengths.X, (int)maxLengths.Y];
-
-            for (int y = 0; y < maxLengths.Y; y++)
-            {
-                for (int x = 0; x < maxLengths.X; x++)
-                {
-                    foreach (var item in charList)
-                    {
-                        if (item.Position == new Vector2((float)x, (float)y) )
-                        {
-							//if character exits here
-                        }
-                    }
-                }
-            }
+            
         }
+        public int xMax
+        {
+            get { return (int)max.X; }
+            set { max.X = value; }
+        }
+
+        public int yMax
+        {
+            get { return (int)max.Y; }
+            set { max.Y = value; }
+        }
+        
     }
 }
