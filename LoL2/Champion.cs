@@ -14,8 +14,8 @@ namespace NovemberProjekt.LoL2
         public KeyboardKey r = KeyboardKey.KEY_R;
         public KeyboardKey d = KeyboardKey.KEY_D;
         public KeyboardKey f = KeyboardKey.KEY_F;
-        int xMoveAmount;
-        int yMoveAmount;
+        double xMoveAmount;
+        double yMoveAmount;
 
         Vector2 mousePos = new Vector2(0,0);
 
@@ -56,18 +56,18 @@ namespace NovemberProjekt.LoL2
         {
             xMoveAmount = (int)(mousePos.X - Position.X);
             yMoveAmount = (int)(mousePos.Y - Position.Y);
-            int totalMoveAmount = (int)Math.Sqrt((Math.Pow((double)xMoveAmount, 2) + Math.Pow((double)yMoveAmount, 2)));
+            int totalMoveAmount = (int)Math.Sqrt((Math.Pow(xMoveAmount, 2) + Math.Pow(yMoveAmount, 2)));
             int forMoveAmount = totalMoveAmount / moveSpeed;
             float mSpeedX = 0;
             float mSpeedY = 0;
             
             if ((int)xMoveAmount != 0 && (int)forMoveAmount != 0)
             {
-                mSpeedX = xMoveAmount / forMoveAmount;
+                mSpeedX = (float)xMoveAmount / forMoveAmount;
             }
             if ((int)yMoveAmount != 0 && (int)forMoveAmount != 0)
             {
-                mSpeedY = yMoveAmount / forMoveAmount;
+                mSpeedY = (float)yMoveAmount / forMoveAmount;
             }
             
             if (counter <= forMoveAmount)
