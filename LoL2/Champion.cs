@@ -35,21 +35,25 @@ namespace NovemberProjekt.LoL2
 
         public override void Inputs()
         {
-            if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_RIGHT_BUTTON))
-            {
-                counter = 0;
-                mousePos = Raylib.GetMousePosition();
-            }
-            Move(counter, mousePos);
+            Move();
 
             if (Raylib.IsKeyPressed(q))
                 Raylib.DrawCircle((int)Position.X + 30, (int)Position.Y, 10, Color.YELLOW);
 
         }
 
-        public void Move(int counter, Vector2 mousePos)
+        public void Move() 
         {
-            bool continueMoving = true;
+            if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_RIGHT_BUTTON))
+            {
+                counter = 0;
+                mousePos = Raylib.GetMousePosition();
+            }
+            Moving(counter, mousePos);
+        }
+
+        public void Moving(int counter, Vector2 mousePos)
+        {
             xMoveAmount = (int)(mousePos.X - Position.X);
             yMoveAmount = (int)(mousePos.Y - Position.Y);
             int totalMoveAmount = (int)Math.Sqrt((Math.Pow((double)xMoveAmount, 2) + Math.Pow((double)yMoveAmount, 2)));
