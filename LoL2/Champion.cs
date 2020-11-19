@@ -17,6 +17,10 @@ namespace NovemberProjekt.LoL2
         int xMoveAmount;
         int yMoveAmount;
 
+        Vector2 mousePos = new Vector2(0,0);
+
+        int counter = 1000000;
+
 
 
         public Champion()
@@ -31,37 +35,42 @@ namespace NovemberProjekt.LoL2
 
         public override void Inputs()
         {
-            int xCounter = 0;
-            int yCounter = 0;
-
             if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_RIGHT_BUTTON))
             {
-                xCounter = 0;
-                yCounter = 0;
+                counter = 0;
+                mousePos = Raylib.GetMousePosition();
             }
-            Move(xCounter, yCounter);
+            Move(counter, mousePos);
 
             if (Raylib.IsKeyPressed(q))
                 Raylib.DrawCircle((int)Position.X + 30, (int)Position.Y, 10, Color.YELLOW);
 
         }
 
-        public void Move(int xCounter, int yCounter)
+        public void Move(int counter, Vector2 mousePos)
         {
-            int mouseX = Raylib.GetMouseX();
-            int mouseY = Raylib.GetMouseY();
-            xMoveAmount = (mouseX - (int)Position.X) / moveSpeed;
-            yMoveAmount = (mouseY - (int)Position.Y) / moveSpeed;
-
-            if (xCounter <= xMoveAmount)
+            bool continueMoving = true;
+            xMoveAmount = (int)(mousePos.X - Position.X);
+            yMoveAmount = (int)(mousePos.Y - Position.Y);
+            int totalMoveAmount = (int)Math.Sqrt((Math.Pow((double)xMoveAmount, 2) + Math.Pow((double)yMoveAmount, 2)));
+            int forMoveAmount = totalMoveAmount / moveSpeed;
+            float mSpeedX = 0;
+            float mSpeedY = 0;
+            
+            if ((int)xMoveAmount != 0 && (int)forMoveAmount != 0)
             {
-                Position.X += moveSpeed;
-                xCounter++;
+                mSpeedX = xMoveAmount / forMoveAmount;
             }
-            if (yCounter <= yMoveAmount)
+            if ((int)yMoveAmount != 0 && (int)forMoveAmount != 0)
             {
-                Position.Y += moveSpeed;
-                yCounter++;
+                mSpeedY = yMoveAmount / forMoveAmount;
+            }
+            
+            if (counter <= forMoveAmount)
+            {
+                Position.X += mSpeedX;
+                Position.Y += mSpeedY;
+                counter++;
             }
         }
     }
