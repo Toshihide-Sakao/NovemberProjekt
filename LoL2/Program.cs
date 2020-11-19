@@ -11,6 +11,7 @@ namespace NovemberProjekt.LoL2
             Champion ezreal = new Champion();
             
             Raylib.InitWindow(aram.xMax, aram.yMax, "Bruh of Bruhhhhhhing");
+            Raylib.SetTargetFPS(60);
             
             while (!Raylib.WindowShouldClose())
             {

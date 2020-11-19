@@ -14,6 +14,9 @@ namespace NovemberProjekt.LoL2
         public KeyboardKey r = KeyboardKey.KEY_R;
         public KeyboardKey d = KeyboardKey.KEY_D;
         public KeyboardKey f = KeyboardKey.KEY_F;
+        int xMoveAmount;
+        int yMoveAmount;
+
 
 
         public Champion()
@@ -22,56 +25,44 @@ namespace NovemberProjekt.LoL2
 
             spawnPos = new Vector2(100, 400);
             Position = spawnPos;
+
+            moveSpeed = 3;
         }
 
         public override void Inputs()
         {
-            if (Raylib.IsKeyPressed(q))
-                Raylib.DrawCircle((int)Position.X + 20, (int)Position.Y + 20, 10, Color.YELLOW);
-
-        }
-
-        public void Move()
-        {
-            bool moveX = true;
-            bool moveY = true;
-            int mouseX = 0;
-            int mouseY = 0;
-
+            int xCounter = 0;
+            int yCounter = 0;
 
             if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_RIGHT_BUTTON))
             {
-                mouseX = Raylib.GetMouseX();
-                mouseY = Raylib.GetMouseY();
-
-                int xMoveAmount = mouseX - (int)Position.X;
-                int yMoveAmount = mouseY - (int)Position.Y;
+                xCounter = 0;
+                yCounter = 0;
             }
-            if (moveX)
+            Move(xCounter, yCounter);
+
+            if (Raylib.IsKeyPressed(q))
+                Raylib.DrawCircle((int)Position.X + 30, (int)Position.Y, 10, Color.YELLOW);
+
+        }
+
+        public void Move(int xCounter, int yCounter)
+        {
+            int mouseX = Raylib.GetMouseX();
+            int mouseY = Raylib.GetMouseY();
+            xMoveAmount = (mouseX - (int)Position.X) / moveSpeed;
+            yMoveAmount = (mouseY - (int)Position.Y) / moveSpeed;
+
+            if (xCounter <= xMoveAmount)
             {
-                if (Position.X != mouseX)
-                {
-                    Position.X += 1;
-                }
-                else
-                {
-                    moveX = false;
-                }
+                Position.X += moveSpeed;
+                xCounter++;
             }
-
-            if (moveY)
+            if (yCounter <= yMoveAmount)
             {
-                if (Position.Y != mouseY)
-                {
-                    Position.Y += 1;
-                }
-                else
-                {
-                    moveY = false;
-                }
+                Position.Y += moveSpeed;
+                yCounter++;
             }
-
-
         }
     }
 }

@@ -10,7 +10,7 @@ namespace NovemberProjekt.LoL2
 	{
 		int damage;
 		protected Vector2 spawnPos;
-		int moveSpeed;
+		protected int moveSpeed;
 
 		public int HP { get; set; } 
 		public Vector2 Position;
