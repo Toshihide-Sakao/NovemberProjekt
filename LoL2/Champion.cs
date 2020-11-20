@@ -82,15 +82,17 @@ namespace NovemberProjekt.LoL2
             int forMoveAmount = (int)(CalcTotalMoveAmount(mousePos) * ratio) / qSpeed;
             Vector2 mSpeed = GetMoveSpeed(mousePos, forMoveAmount);
             Vector2 moveAmount = CalcMoveAmountXY(mousePos);
-            Vector2 qL = new Vector2(moveAmount.X * ratio, moveAmount.Y * ratio);
+            Vector2 qMoveAmount = new Vector2(moveAmount.X * ratio, moveAmount.Y * ratio);
 
             if (qLengthCounter <= forMoveAmount)
             {
-                Position.X += mSpeed.X;
-                Position.Y += mSpeed.Y;
+                // Position.X += mSpeed.X;
+                // Position.Y += mSpeed.Y;
+                //Vector2 qPos = new Vector2(Position.X + , Position.Y + qMoveAmount.Y);
+                Raylib.DrawCircle((int)(Position.X + qMoveAmount.X * (float)qLengthCounter), (int)(Position.Y + qMoveAmount.Y * (float)qLengthCounter), 10, Color.YELLOW);
             }
 
-            Raylib.DrawCircle((int)Position.X + 30, (int)Position.Y, 10, Color.YELLOW);
+            
         }
 
         public void Moving(Vector2 mousePos)
