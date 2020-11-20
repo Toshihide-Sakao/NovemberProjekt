@@ -17,7 +17,7 @@ namespace NovemberProjekt.LoL2
         double xMoveAmount;
         double yMoveAmount;
 
-        Vector2 mousePos = new Vector2(0,0);
+        Vector2 mousePos = new Vector2(0, 0);
 
         int counter = 1000000;
 
@@ -36,13 +36,13 @@ namespace NovemberProjekt.LoL2
         public override void Inputs()
         {
             Move();
+            Cast();
 
-            if (Raylib.IsKeyPressed(q))
-                Raylib.DrawCircle((int)Position.X + 30, (int)Position.Y, 10, Color.YELLOW);
+
 
         }
 
-        public void Move() 
+        public void Move()
         {
             if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_RIGHT_BUTTON))
             {
@@ -50,6 +50,17 @@ namespace NovemberProjekt.LoL2
                 mousePos = Raylib.GetMousePosition();
             }
             Moving(counter, mousePos);
+        }
+
+        public void Cast()
+        {
+            if (Raylib.IsKeyPressed(q))
+                qAbillity();
+        }
+
+        public void qAbillity()
+        {
+            Raylib.DrawCircle((int)Position.X + 30, (int)Position.Y, 10, Color.YELLOW);
         }
 
         public void Moving(int counter, Vector2 mousePos)
@@ -60,7 +71,7 @@ namespace NovemberProjekt.LoL2
             int forMoveAmount = totalMoveAmount / moveSpeed;
             float mSpeedX = 0;
             float mSpeedY = 0;
-            
+
             if ((int)xMoveAmount != 0 && (int)forMoveAmount != 0)
             {
                 mSpeedX = (float)xMoveAmount / forMoveAmount;
@@ -69,7 +80,7 @@ namespace NovemberProjekt.LoL2
             {
                 mSpeedY = (float)yMoveAmount / forMoveAmount;
             }
-            
+
             if (counter <= forMoveAmount)
             {
                 Position.X += mSpeedX;
