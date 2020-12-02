@@ -86,23 +86,6 @@ namespace NovemberProjekt.LoL2
         {
             int qLength = 100;
             int qSpeed = 5;
-<<<<<<< Updated upstream
-            float ratio = CalcTotalMoveAmount(mousePos) / qLength;
-            int forMoveAmount = (int)(CalcTotalMoveAmount(mousePos) * ratio) / qSpeed;
-            Vector2 mSpeed = GetMoveSpeed(mousePos, forMoveAmount);
-            Vector2 moveAmount = CalcMoveAmountXY(mousePos);
-            Vector2 qMoveAmount = new Vector2(moveAmount.X * ratio, moveAmount.Y * ratio);
-
-            if (qLengthCounter <= forMoveAmount)
-            {
-                // Position.X += mSpeed.X;
-                // Position.Y += mSpeed.Y;
-                //Vector2 qPos = new Vector2(Position.X + , Position.Y + qMoveAmount.Y);
-                Raylib.DrawCircle((int)(Position.X + qMoveAmount.X * (float)qLengthCounter), (int)(Position.Y + qMoveAmount.Y * (float)qLengthCounter), 10, Color.YELLOW);
-            }
-
-            
-=======
             float ratio = qLength / CalcTotalMoveAmount(qMousePos); // calcing ratio between mousepos and targetpos
             // int totalMoveAmount = (int)(CalcTotalMoveAmount(mousePos) * ratio); // calculating total amount to move to reach target. (diagonal)
 
@@ -124,7 +107,6 @@ namespace NovemberProjekt.LoL2
             }
 
             Raylib.DrawCircle((int)qPos.X, (int)qPos.Y, 10, Color.RED);
->>>>>>> Stashed changes
         }
 
         public void Moving(Vector2 mousePos)
