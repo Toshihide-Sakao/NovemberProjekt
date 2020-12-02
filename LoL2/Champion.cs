@@ -26,6 +26,7 @@ namespace NovemberProjekt.LoL2
         int wLengthCounter = 1000000;
 
         Vector2 qPos;
+        Vector2 targetqPos;
 
 
 
@@ -103,7 +104,6 @@ namespace NovemberProjekt.LoL2
             {
                 qPos.X += mSpeed.X;
                 qPos.Y += mSpeed.Y;
-                qLengthCounter++;
             }
 
             Raylib.DrawCircle((int)qPos.X, (int)qPos.Y, 10, Color.RED);
