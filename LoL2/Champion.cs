@@ -26,7 +26,7 @@ namespace NovemberProjekt.LoL2
         int wLengthCounter = 1000000;
 
         Vector2 qPos;
-        Vector2 targetqPos;
+        Vector2 ePos;
 
 
 
@@ -46,9 +46,6 @@ namespace NovemberProjekt.LoL2
         {
             Move();
             Cast();
-
-
-
         }
 
         public void Move()
@@ -85,7 +82,7 @@ namespace NovemberProjekt.LoL2
 
         public void qAbillity()
         {
-            int qLength = 100;
+            int qLength = 150;
             int qSpeed = 5;
             float ratio = qLength / CalcTotalMoveAmount(qMousePos); // calcing ratio between mousepos and targetpos
             // int totalMoveAmount = (int)(CalcTotalMoveAmount(mousePos) * ratio); // calculating total amount to move to reach target. (diagonal)
@@ -104,9 +101,15 @@ namespace NovemberProjekt.LoL2
             {
                 qPos.X += mSpeed.X;
                 qPos.Y += mSpeed.Y;
+
+                qLengthCounter++;
+            }
+            else
+            {
+                qPos = Position;
             }
 
-            Raylib.DrawCircle((int)qPos.X, (int)qPos.Y, 10, Color.RED);
+            Raylib.DrawCircle((int)qPos.X, (int)qPos.Y, 10, Color.YELLOW);
         }
 
         public void Moving(Vector2 mousePos)
