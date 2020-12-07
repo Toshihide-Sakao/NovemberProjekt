@@ -26,7 +26,12 @@ namespace NovemberProjekt.LoL2
         int wLengthCounter = 1000000;
 
         Vector2 qPos;
+        bool qInProgress = false;
+        Vector2 wPos;
+        bool wInProgress = false;
         Vector2 ePos;
+
+        float qCoolDown = 0;
 
 
 
@@ -60,24 +65,28 @@ namespace NovemberProjekt.LoL2
 
         public void Cast()
         {
-            if (Raylib.IsKeyPressed(q))
+            if (Raylib.IsKeyPressed(q) && qInProgress == false)
             {
                 qLengthCounter = 0;
                 qMousePos = Raylib.GetMousePosition();
+                qInProgress = true;
             }
             else if (Raylib.IsKeyPressed(w))
             {
                 wLengthCounter = 0;
+                wMousePos = Raylib.GetMousePosition();
+                wInProgress = true;
             }
             else if (Raylib.IsKeyPressed(e))
             {
-
+                
             }
             else if (Raylib.IsKeyPressed(r))
             {
 
             }
             qAbillity();
+            wAbillity();
         }
 
         public void qAbillity()
@@ -102,14 +111,46 @@ namespace NovemberProjekt.LoL2
                 qPos.X += mSpeed.X;
                 qPos.Y += mSpeed.Y;
 
+                Raylib.DrawCircle((int)qPos.X, (int)qPos.Y, 10, Color.RED);
+
                 qLengthCounter++;
             }
             else
             {
                 qPos = Position;
+                qInProgress = false;
             }
+        }
 
-            Raylib.DrawCircle((int)qPos.X, (int)qPos.Y, 10, Color.YELLOW);
+        public void wAbillity()
+        {
+            int wLength = 220;
+            int wSpeed = 5;
+            float ratio = wLength / CalcTotalMoveAmount(wMousePos); // calcing ratio between mousepos and targetpos
+            // int totalMoveAmount = (int)(CalcTotalMoveAmount(mousePos) * ratio); // calculating total amount to move to reach target. (diagonal)
+
+            int forMoveAmount = wLength / wSpeed; // amount to move every frame.
+
+            Console.WriteLine(wMousePos);
+            Vector2 bruh = new Vector2((wMousePos.X - Position.X) * ratio, (wMousePos.Y - Position.Y) * ratio);
+            // Vector2 targetPos = new Vector2(bruh.X * ratio, bruh.Y * ratio);
+            
+            Vector2 mSpeed = GetMoveSpeed(bruh, forMoveAmount);
+
+            if (wLengthCounter <= forMoveAmount)
+            {
+                wPos.X += mSpeed.X;
+                wPos.Y += mSpeed.Y;
+
+                Raylib.DrawCircle((int)wPos.X, (int)wPos.Y, 15, Color.GRAY);
+
+                wLengthCounter++;
+            }
+            else
+            {
+                wPos = Position;
+                wInProgress = false;
+            }
         }
 
         public void Moving(Vector2 mousePos)
