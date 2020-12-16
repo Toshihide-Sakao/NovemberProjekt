@@ -30,6 +30,7 @@ namespace NovemberProjekt.LoL2
         Vector2 wPos;
         bool wInProgress = false;
         Vector2 ePos;
+        bool eInProgress = false;
 
         float qCoolDown = 0;
 
@@ -79,7 +80,8 @@ namespace NovemberProjekt.LoL2
             }
             else if (Raylib.IsKeyPressed(e))
             {
-                
+                eMousePos = Raylib.GetMousePosition();
+                eInProgress = true;
             }
             else if (Raylib.IsKeyPressed(r))
             {
@@ -87,6 +89,7 @@ namespace NovemberProjekt.LoL2
             }
             qAbillity();
             wAbillity();
+            eAbillity();
         }
 
         public void qAbillity()
@@ -97,11 +100,9 @@ namespace NovemberProjekt.LoL2
             // int totalMoveAmount = (int)(CalcTotalMoveAmount(mousePos) * ratio); // calculating total amount to move to reach target. (diagonal)
 
             int forMoveAmount = qLength / qSpeed; // amount to move every frame.
-
-            Console.WriteLine(qMousePos);
             Vector2 bruh = new Vector2((qMousePos.X - Position.X) * ratio, (qMousePos.Y - Position.Y) * ratio);
             // Vector2 targetPos = new Vector2(bruh.X * ratio, bruh.Y * ratio);
-            
+
             Vector2 mSpeed = GetMoveSpeed(bruh, forMoveAmount);
 
 
@@ -130,11 +131,9 @@ namespace NovemberProjekt.LoL2
             // int totalMoveAmount = (int)(CalcTotalMoveAmount(mousePos) * ratio); // calculating total amount to move to reach target. (diagonal)
 
             int forMoveAmount = wLength / wSpeed; // amount to move every frame.
-
-            Console.WriteLine(wMousePos);
             Vector2 bruh = new Vector2((wMousePos.X - Position.X) * ratio, (wMousePos.Y - Position.Y) * ratio);
             // Vector2 targetPos = new Vector2(bruh.X * ratio, bruh.Y * ratio);
-            
+
             Vector2 mSpeed = GetMoveSpeed(bruh, forMoveAmount);
 
             if (wLengthCounter <= forMoveAmount)
@@ -151,6 +150,25 @@ namespace NovemberProjekt.LoL2
                 wPos = Position;
                 wInProgress = false;
             }
+        }
+
+        public void eAbillity()
+        {
+            int eLength = 170;
+            float ratio = eLength / CalcTotalMoveAmount(eMousePos); // calcing ratio between mousepos and targetpos
+
+            Vector2 bruh = new Vector2((eMousePos.X - Position.X) * ratio, (eMousePos.Y - Position.Y) * ratio);
+            Console.WriteLine(bruh);
+
+            if (eInProgress)
+            {
+                Position = new Vector2(Position.X + bruh.X, Position.Y + bruh.Y);
+                eInProgress = false;
+            }
+            // else
+            // {
+            //     eInProgress = false;
+            // }
         }
 
         public void Moving(Vector2 mousePos)
