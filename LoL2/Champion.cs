@@ -158,17 +158,21 @@ namespace NovemberProjekt.LoL2
             float ratio = eLength / CalcTotalMoveAmount(eMousePos); // calcing ratio between mousepos and targetpos
 
             Vector2 bruh = new Vector2((eMousePos.X - Position.X) * ratio, (eMousePos.Y - Position.Y) * ratio);
-            Console.WriteLine(bruh);
-
+            
+            System.Console.WriteLine(bruh);
             if (eInProgress)
             {
-                Position = new Vector2(Position.X + bruh.X, Position.Y + bruh.Y);
+                Vector2 LimitPos = new Vector2(Position.X + bruh.X, Position.Y + bruh.Y);
+                if (false)
+                {
+                    
+                }
+                else
+                {
+                    Position = LimitPos;
+                }
                 eInProgress = false;
             }
-            // else
-            // {
-            //     eInProgress = false;
-            // }
         }
 
         public void Moving(Vector2 mousePos)
