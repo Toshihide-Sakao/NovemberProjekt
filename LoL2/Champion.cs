@@ -32,7 +32,17 @@ namespace NovemberProjekt.LoL2
         Vector2 ePos;
         bool eInProgress = false;
 
-        float qCoolDown = 0;
+        float qCooldown = 3.3f;
+        float wCooldown = 5.0f;
+        float eCooldown = 9.0f;
+
+        DateTime qStart;
+        DateTime wStart;
+        DateTime eStart;
+
+        public double qCoolDownPassedTime;
+        public double wCoolDownPassedTime;
+        public double eCoolDownPassedTime;
 
 
 
@@ -45,7 +55,9 @@ namespace NovemberProjekt.LoL2
 
             moveSpeed = 2;
 
-            qPos = Position;
+            qStart = DateTime.Now;
+            wStart = DateTime.Now;
+            eStart = DateTime.Now;
         }
 
         public override void Inputs()
@@ -66,20 +78,29 @@ namespace NovemberProjekt.LoL2
 
         public void Cast()
         {
-            if (Raylib.IsKeyPressed(q) && qInProgress == false)
+            qCoolDownPassedTime = qCooldown - (DateTime.Now - qStart).TotalSeconds;
+            wCoolDownPassedTime = wCooldown - (DateTime.Now - wStart).TotalSeconds;
+            eCoolDownPassedTime = eCooldown - (DateTime.Now - eStart).TotalSeconds;
+
+            // System.Console.WriteLine(qCoolDownPassedTime);
+
+            if (Raylib.IsKeyPressed(q) && qInProgress == false && qCoolDownPassedTime < 0)
             {
+                qStart = DateTime.Now;
                 qLengthCounter = 0;
                 qMousePos = Raylib.GetMousePosition();
                 qInProgress = true;
             }
-            else if (Raylib.IsKeyPressed(w))
+            else if (Raylib.IsKeyPressed(w) && wInProgress == false && wCoolDownPassedTime < 0)
             {
+                wStart = DateTime.Now;
                 wLengthCounter = 0;
                 wMousePos = Raylib.GetMousePosition();
                 wInProgress = true;
             }
-            else if (Raylib.IsKeyPressed(e))
+            else if (Raylib.IsKeyPressed(e) && eCoolDownPassedTime < 0)
             {
+                eStart = DateTime.Now;
                 eMousePos = Raylib.GetMousePosition();
                 eInProgress = true;
             }
@@ -87,8 +108,9 @@ namespace NovemberProjekt.LoL2
             {
 
             }
-            qAbillity();
+            
             wAbillity();
+            qAbillity();
             eAbillity();
         }
 
@@ -158,14 +180,13 @@ namespace NovemberProjekt.LoL2
             float ratio = eLength / CalcTotalMoveAmount(eMousePos); // calcing ratio between mousepos and targetpos
 
             Vector2 bruh = new Vector2((eMousePos.X - Position.X) * ratio, (eMousePos.Y - Position.Y) * ratio);
-            
-            System.Console.WriteLine(bruh);
+
             if (eInProgress)
             {
                 Vector2 LimitPos = new Vector2(Position.X + bruh.X, Position.Y + bruh.Y);
-                if (false)
+                if (CalcTotalMoveAmount(eMousePos) <= 170)
                 {
-                    
+                    Position = eMousePos;
                 }
                 else
                 {
