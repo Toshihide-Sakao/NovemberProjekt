@@ -39,8 +39,16 @@ namespace NovemberProjekt.LoL2
                 {
                     Raylib.DrawRectangle(xBox + 70 * i, yBox, 60, 60, boxColor);
                 }
+                if (abillityCDs[i] >= 1)
+                {
+                    Raylib.DrawText(((int)(Math.Max(0, abillityCDs[i]))).ToString(), (xBox + 10) + 70 * i, yBox + 20, 30, Color.BLACK);
+                }
+                else if (abillityCDs[i] > 0)
+                {
+                    float cdOneDecimal =  (int)(10 * (Math.Max(0, abillityCDs[i]))) / 10.0f;
+                    Raylib.DrawText(cdOneDecimal.ToString(), (xBox + 10) + 70 * i, yBox + 20, 30, Color.BLACK);
+                }
                 
-                Raylib.DrawText(((int)(Math.Max(0, abillityCDs[i]))).ToString(), (xBox + 10) + 70 * i, yBox + 20, 30, Color.BLACK);
             }
         }
     }
