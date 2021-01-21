@@ -192,6 +192,7 @@ namespace NovemberProjekt.LoL2
                 {
                     Position = LimitPos;
                 }
+                counter = 1000000;
                 eInProgress = false;
             }
         }
