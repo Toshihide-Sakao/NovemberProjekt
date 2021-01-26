@@ -8,20 +8,8 @@ namespace NovemberProjekt.LoL2
 {
     public class Champion : Character
     {
-        // Key inputs
-        public KeyboardKey q = KeyboardKey.KEY_Q;
-        public KeyboardKey w = KeyboardKey.KEY_W;
-        public KeyboardKey e = KeyboardKey.KEY_E;
-        public KeyboardKey r = KeyboardKey.KEY_R;
-        public KeyboardKey d = KeyboardKey.KEY_D;
-        public KeyboardKey f = KeyboardKey.KEY_F;
-
-        // Mouse position variables
-        Vector2 moveMousePos = new Vector2(0, 0);
-        Vector2 qMousePos = new Vector2();
-        Vector2 wMousePos = new Vector2();
-        Vector2 eMousePos = new Vector2();
-        Vector2 rMousePOs = new Vector2();
+        // Mouse position variable
+        Vector2 moveMousePos = new Vector2();
 
         // Counters for projectile skills
         int qLengthCounter = 1000000;
@@ -29,13 +17,11 @@ namespace NovemberProjekt.LoL2
 
         // Bool for if action is in progress
         bool moveInProgress = false;
+
         // Position for abillity
-        Vector2 qPos;
-        bool qInProgress = false;
-        Vector2 wPos;
-        bool wInProgress = false;
-        Vector2 ePos;
-        bool eInProgress = false;
+        public Vector2 qPos;
+        public Vector2 wPos;
+        public Vector2 ePos;
 
         // Cooldowns for abillities
         float qCooldown = 3.3f;
@@ -123,6 +109,25 @@ namespace NovemberProjekt.LoL2
             wCoolDownPassedTime = wCooldown - (DateTime.Now - wStart).TotalSeconds;
             eCoolDownPassedTime = eCooldown - (DateTime.Now - eStart).TotalSeconds;
 
+            // mouse position variables
+            Vector2 qMousePos = new Vector2();
+            Vector2 wMousePos = new Vector2();
+            Vector2 eMousePos = new Vector2();
+            Vector2 rMousePOs = new Vector2();
+
+            // Key inputs
+            KeyboardKey q = KeyboardKey.KEY_Q;
+            KeyboardKey w = KeyboardKey.KEY_W;
+            KeyboardKey e = KeyboardKey.KEY_E;
+            KeyboardKey r = KeyboardKey.KEY_R;
+            KeyboardKey d = KeyboardKey.KEY_D;
+            KeyboardKey f = KeyboardKey.KEY_F;
+
+            // Progress
+            bool qInProgress = false;
+            bool wInProgress = false;
+            bool eInProgress = false;
+
             // if q is pressed
             if (Raylib.IsKeyPressed(q) && qInProgress == false && qCoolDownPassedTime < 0)
             {
@@ -130,14 +135,14 @@ namespace NovemberProjekt.LoL2
                 qTime = DateTime.Now; // time which will reset every timeframe
                 qLengthCounter = 0; // Counter for how many times it should move
                 qMousePos = Raylib.GetMousePosition(); // Record mousepos when q was pressed
-                qInProgress = true; 
+                qInProgress = true;
                 qPos = Position; // Start position
-                
+
                 mana -= qManaCost; // reduce mana
             }
             else if (Raylib.IsKeyPressed(w) && wInProgress == false && wCoolDownPassedTime < 0)
             {
-                wStart = DateTime.Now; 
+                wStart = DateTime.Now;
                 wTime = DateTime.Now;
                 wLengthCounter = 0;
                 wMousePos = Raylib.GetMousePosition();
@@ -159,9 +164,9 @@ namespace NovemberProjekt.LoL2
 
             }
 
-            wAbillity();
-            qAbillity();
-            eAbillity();
+            wAbillity(wMousePos, wInProgress);
+            qAbillity(qMousePos, qInProgress);
+            eAbillity(eMousePos, eInProgress);
         }
 
         // Recover func
@@ -191,7 +196,7 @@ namespace NovemberProjekt.LoL2
             }
         }
 
-        public void qAbillity()
+        public void qAbillity(Vector2 qMousePos, bool qInProgress)
         {
             int qLength = 200; // length of q
             int qSpeed = 5; // speed of q
@@ -212,7 +217,7 @@ namespace NovemberProjekt.LoL2
                     // move position for one timeframe
                     qPos.X += mSpeed.X;
                     qPos.Y += mSpeed.Y;
-                    
+
                     qTime = DateTime.Now; // recording new datetime
                     qLengthCounter++; // adding to counter
                 }
@@ -227,7 +232,7 @@ namespace NovemberProjekt.LoL2
         }
 
         // W func
-        public void wAbillity()
+        public void wAbillity(Vector2 wMousePos, bool wInProgress)
         {
             int wLength = 230;
             int wSpeed = 5;
@@ -262,7 +267,7 @@ namespace NovemberProjekt.LoL2
         }
 
         // e func
-        public void eAbillity()
+        public void eAbillity(Vector2 eMousePos, bool eInProgress)
         {
             int eLength = 170;
             float ratio = eLength / CalcTotalMoveAmount(eMousePos); // calcing ratio between mousepos and targetpos
@@ -272,7 +277,7 @@ namespace NovemberProjekt.LoL2
             if (eInProgress)
             {
                 // Limit position for global
-                Vector2 LimitPos = new Vector2(Position.X + localLimit.X, Position.Y + localLimit.Y); 
+                Vector2 LimitPos = new Vector2(Position.X + localLimit.X, Position.Y + localLimit.Y);
 
                 // when mousepos is smaller than limit
                 if (CalcTotalMoveAmount(eMousePos) <= eLength)

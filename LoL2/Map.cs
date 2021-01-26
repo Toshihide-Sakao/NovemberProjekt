@@ -39,11 +39,7 @@ namespace NovemberProjekt.LoL2
             Raylib.DrawCircle((int)guy.Position.X, (int)guy.Position.Y, 20, guy.graphic);
             guy.Inputs();
         }
-
-        private void setMap(List<Character> charList)
-        {
-            
-        }
+        
         public int xMax
         {
             get { return (int)max.X; }
