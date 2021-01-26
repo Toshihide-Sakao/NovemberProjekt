@@ -24,7 +24,7 @@ namespace NovemberProjekt.LoL2
 
         public void update()
         {
-            Raylib.DrawRectangle(x, y, 400, 100, backColor);
+            Raylib.DrawRectangle(x, y, 400, 150, backColor);
             int xBox = x + 20;
             int yBox = y + 20;
 
@@ -50,6 +50,10 @@ namespace NovemberProjekt.LoL2
                 }
                 
             }
+            float hp = (int)(champ.HP * 100) / 100f;
+            float mana = (int)(champ.mana * 100) / 100f;
+            Raylib.DrawText(hp.ToString(), xBox + 170, yBox + 75, 18, Color.WHITE);
+            Raylib.DrawText(mana.ToString(), xBox + 170, yBox + 100, 18, Color.WHITE);
         }
     }
 }

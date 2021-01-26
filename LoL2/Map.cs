@@ -9,12 +9,7 @@ namespace NovemberProjekt.LoL2
     public class Map
     {
         Vector2 max;
-        Color backgroundColor = new Color(76, 151, 217, 1);
-
-        public void Draw()
-        {
-            
-        }
+        Color backgroundColor = new Color(76, 151, 217, 255);
 
         public Map()
         {
@@ -41,8 +36,7 @@ namespace NovemberProjekt.LoL2
 
         void drawCharacter(Character guy)
         {
-            Raylib.DrawCircle((int)guy.Position.X, (int)guy.Position.Y, 20, Color.YELLOW);
-
+            Raylib.DrawCircle((int)guy.Position.X, (int)guy.Position.Y, 20, guy.graphic);
             guy.Inputs();
         }
 

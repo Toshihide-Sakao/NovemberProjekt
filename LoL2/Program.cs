@@ -14,7 +14,7 @@ namespace NovemberProjekt.LoL2
             Raylib.InitWindow(aram.xMax, aram.yMax, "Bruh of Bruhhhhhhing");
             Raylib.SetTargetFPS(60);
             
-            UserInterface ezUI = new UserInterface(200, 700, ezreal);
+            UserInterface ezUI = new UserInterface(200, 650, ezreal);
             while (!Raylib.WindowShouldClose())
             {
                 Raylib.BeginDrawing();

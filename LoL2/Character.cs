@@ -12,7 +12,7 @@ namespace NovemberProjekt.LoL2
 		protected Vector2 spawnPos;
 		protected int moveSpeed;
 
-		public int HP { get; set; } 
+		public float HP { get; set; } 
 		public Vector2 Position;
 		public Color graphic;
 		
@@ -20,14 +20,10 @@ namespace NovemberProjekt.LoL2
 
 		public Character()
 		{
-			// Graphic = new Color(222, 224, 92, 1);
+			graphic = new Color(222, 224, 92, 255);
 			list.Add(this);
 		}
-
-		public void Draw(int type)
-		{
-			
-		}
+		
 		public virtual void Inputs()
 		{
 
