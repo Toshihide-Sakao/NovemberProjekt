@@ -60,6 +60,17 @@ namespace NovemberProjekt.LoL2
         float wManaCost = 50f;
         float eManaCost = 70f;
 
+        // Progress
+        bool qInProgress = false;
+        bool wInProgress = false;
+        bool eInProgress = false;
+
+        // mouse position variables
+        Vector2 qMousePos = new Vector2();
+        Vector2 wMousePos = new Vector2();
+        Vector2 eMousePos = new Vector2();
+        Vector2 rMousePOs = new Vector2();
+
 
         // Const
         public Champion()
@@ -109,12 +120,6 @@ namespace NovemberProjekt.LoL2
             wCoolDownPassedTime = wCooldown - (DateTime.Now - wStart).TotalSeconds;
             eCoolDownPassedTime = eCooldown - (DateTime.Now - eStart).TotalSeconds;
 
-            // mouse position variables
-            Vector2 qMousePos = new Vector2();
-            Vector2 wMousePos = new Vector2();
-            Vector2 eMousePos = new Vector2();
-            Vector2 rMousePOs = new Vector2();
-
             // Key inputs
             KeyboardKey q = KeyboardKey.KEY_Q;
             KeyboardKey w = KeyboardKey.KEY_W;
@@ -122,11 +127,6 @@ namespace NovemberProjekt.LoL2
             KeyboardKey r = KeyboardKey.KEY_R;
             KeyboardKey d = KeyboardKey.KEY_D;
             KeyboardKey f = KeyboardKey.KEY_F;
-
-            // Progress
-            bool qInProgress = false;
-            bool wInProgress = false;
-            bool eInProgress = false;
 
             // if q is pressed
             if (Raylib.IsKeyPressed(q) && qInProgress == false && qCoolDownPassedTime < 0)
@@ -164,9 +164,9 @@ namespace NovemberProjekt.LoL2
 
             }
 
-            wAbillity(wMousePos, wInProgress);
-            qAbillity(qMousePos, qInProgress);
-            eAbillity(eMousePos, eInProgress);
+            wAbillity(wMousePos);
+            qAbillity(qMousePos);
+            eAbillity(eMousePos);
         }
 
         // Recover func
@@ -196,7 +196,7 @@ namespace NovemberProjekt.LoL2
             }
         }
 
-        public void qAbillity(Vector2 qMousePos, bool qInProgress)
+        public void qAbillity(Vector2 qMousePos)
         {
             int qLength = 200; // length of q
             int qSpeed = 5; // speed of q
@@ -232,7 +232,7 @@ namespace NovemberProjekt.LoL2
         }
 
         // W func
-        public void wAbillity(Vector2 wMousePos, bool wInProgress)
+        public void wAbillity(Vector2 wMousePos)
         {
             int wLength = 230;
             int wSpeed = 5;
@@ -267,7 +267,7 @@ namespace NovemberProjekt.LoL2
         }
 
         // e func
-        public void eAbillity(Vector2 eMousePos, bool eInProgress)
+        public void eAbillity(Vector2 eMousePos)
         {
             int eLength = 170;
             float ratio = eLength / CalcTotalMoveAmount(eMousePos); // calcing ratio between mousepos and targetpos
