@@ -8,22 +8,23 @@ namespace NovemberProjekt.LoL2
 {
 	public class Character
 	{
-		int damage;
-		protected Vector2 spawnPos;
-		protected int moveSpeed;
+		int damage; // Not Used yet
+		protected Vector2 spawnPos; // spawn position
+		protected int moveSpeed; // Character Movement speed
 
-		public float HP { get; set; } 
-		public Vector2 Position;
-		public Color graphic;
+		public float HP { get; set; } // Character HP
+		public Vector2 Position; // Character position
+		public Color graphic; // Color for character
 		
-		public static List<Character> list = new List<Character>();
+		public static List<Character> list = new List<Character>(); // List for all characters
 
+		// Constructor for Charachter
 		public Character()
 		{
-			graphic = new Color(222, 224, 92, 255);
-			list.Add(this);
+			graphic = new Color(222, 224, 92, 255); // Deciding color for character
+			list.Add(this); // adding char to list
 		}
-		
+
 		public virtual void Inputs()
 		{
 

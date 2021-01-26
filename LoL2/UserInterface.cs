@@ -18,8 +18,6 @@ namespace NovemberProjekt.LoL2
             x = xPos;
             y = yPos;
             champ = champion;
-
-            // Raylib.DrawRectangle(x, y, 300, 100, backColor);
         }
 
         public void update()

@@ -8,6 +8,7 @@ namespace NovemberProjekt.LoL2
 {
     public class Champion : Character
     {
+        // Key inputs
         public KeyboardKey q = KeyboardKey.KEY_Q;
         public KeyboardKey w = KeyboardKey.KEY_W;
         public KeyboardKey e = KeyboardKey.KEY_E;
@@ -15,17 +16,20 @@ namespace NovemberProjekt.LoL2
         public KeyboardKey d = KeyboardKey.KEY_D;
         public KeyboardKey f = KeyboardKey.KEY_F;
 
+        // Mouse position variables
         Vector2 moveMousePos = new Vector2(0, 0);
         Vector2 qMousePos = new Vector2();
         Vector2 wMousePos = new Vector2();
         Vector2 eMousePos = new Vector2();
         Vector2 rMousePOs = new Vector2();
 
-
+        // Counters for projectile skills
         int qLengthCounter = 1000000;
         int wLengthCounter = 1000000;
 
+        // Bool for if action is in progress
         bool moveInProgress = false;
+        // Position for abillity
         Vector2 qPos;
         bool qInProgress = false;
         Vector2 wPos;
@@ -33,34 +37,45 @@ namespace NovemberProjekt.LoL2
         Vector2 ePos;
         bool eInProgress = false;
 
+        // Cooldowns for abillities
         float qCooldown = 3.3f;
         float wCooldown = 5.0f;
         float eCooldown = 9.0f;
 
+        // Time that resets every timeframe for each usage
         DateTime moveStart;
         DateTime qTime;
         DateTime wTime;
 
+        // Time for when the abillity was casted
         DateTime qStart;
         DateTime wStart;
         DateTime eStart;
 
+        // REcord maxHP and max mana
         float maxHP;
         float maxMana;
+
+        // mana
         public float mana = 300f;
+
+        // REcovery which occurs by time
         public float hpRecoverByTime = 2f;
         public float manaRecoverByTime = 0.1f;
         DateTime recoverTime;
+
+        // CD for abillities
         public double qCoolDownPassedTime;
         public double wCoolDownPassedTime;
         public double eCoolDownPassedTime;
 
+        // Mana cost for abillities
         float qManaCost = 30f;
         float wManaCost = 50f;
         float eManaCost = 70f;
 
 
-
+        // Const
         public Champion()
         {
             spawnPos = new Vector2(100, 400);
@@ -80,6 +95,7 @@ namespace NovemberProjekt.LoL2
             maxMana = mana;
         }
 
+        // This is the function that is placed in the game loop
         public override void Inputs()
         {
             Move();
@@ -87,6 +103,7 @@ namespace NovemberProjekt.LoL2
             Recover();
         }
 
+        // Move func
         public void Move()
         {
             if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_RIGHT_BUTTON))
@@ -98,28 +115,29 @@ namespace NovemberProjekt.LoL2
             Moving(moveMousePos);
         }
 
+        // Cast Func
         public void Cast()
         {
+            // Making the cooldowns go down to 0
             qCoolDownPassedTime = qCooldown - (DateTime.Now - qStart).TotalSeconds;
             wCoolDownPassedTime = wCooldown - (DateTime.Now - wStart).TotalSeconds;
             eCoolDownPassedTime = eCooldown - (DateTime.Now - eStart).TotalSeconds;
 
-            // System.Console.WriteLine(qCoolDownPassedTime);
-
+            // if q is pressed
             if (Raylib.IsKeyPressed(q) && qInProgress == false && qCoolDownPassedTime < 0)
             {
-                qStart = DateTime.Now;
-                qTime = DateTime.Now;
-                qLengthCounter = 0;
-                qMousePos = Raylib.GetMousePosition();
-                qInProgress = true;
-                qPos = Position;
-
-                mana -= qManaCost;
+                qStart = DateTime.Now; // start time 
+                qTime = DateTime.Now; // time which will reset every timeframe
+                qLengthCounter = 0; // Counter for how many times it should move
+                qMousePos = Raylib.GetMousePosition(); // Record mousepos when q was pressed
+                qInProgress = true; 
+                qPos = Position; // Start position
+                
+                mana -= qManaCost; // reduce mana
             }
             else if (Raylib.IsKeyPressed(w) && wInProgress == false && wCoolDownPassedTime < 0)
             {
-                wStart = DateTime.Now;
+                wStart = DateTime.Now; 
                 wTime = DateTime.Now;
                 wLengthCounter = 0;
                 wMousePos = Raylib.GetMousePosition();
@@ -146,11 +164,13 @@ namespace NovemberProjekt.LoL2
             eAbillity();
         }
 
+        // Recover func
         public void Recover()
         {
-            double deltaTime = (DateTime.Now - recoverTime).TotalSeconds;
+            double deltaTime = (DateTime.Now - recoverTime).TotalSeconds; // deltatime
             if (deltaTime >= 1f)
             {
+                // if so HP doesnt go over max
                 if (HP + hpRecoverByTime > maxHP)
                 {
                     HP = maxHP;
@@ -173,45 +193,48 @@ namespace NovemberProjekt.LoL2
 
         public void qAbillity()
         {
-            int qLength = 200;
-            int qSpeed = 5;
+            int qLength = 200; // length of q
+            int qSpeed = 5; // speed of q
             float ratio = qLength / CalcTotalMoveAmount(qMousePos); // calcing ratio between mousepos and targetpos
 
             int forMoveAmount = qLength / qSpeed; // amount to move every frame.
             Vector2 targetLocal = new Vector2((qMousePos.X - Position.X) * ratio, (qMousePos.Y - Position.Y) * ratio); // Target position but in local coordinates
 
-            Vector2 mSpeed = GetMoveSpeed(targetLocal, forMoveAmount);
+            Vector2 mSpeed = GetMoveSpeed(targetLocal, forMoveAmount); // amount to move x and y for every timeframe
 
+            // if q is in progress
             if (qInProgress)
             {
+                // timer for checking every timeframe
                 double qTimer = (DateTime.Now - qTime).TotalSeconds;
                 if (qTimer >= 0.008f && qLengthCounter <= forMoveAmount)
                 {
+                    // move position for one timeframe
                     qPos.X += mSpeed.X;
                     qPos.Y += mSpeed.Y;
-                    qTime = DateTime.Now;
-
-                    qLengthCounter++;
+                    
+                    qTime = DateTime.Now; // recording new datetime
+                    qLengthCounter++; // adding to counter
                 }
                 if (qLengthCounter > forMoveAmount)
                 {
-                    qInProgress = false;
+                    qInProgress = false; // stop when counter has reached formoveamount
                 }
 
+                // draw projectile while q is in progress
                 Raylib.DrawCircle((int)qPos.X, (int)qPos.Y, 10, Color.RED);
             }
         }
 
+        // W func
         public void wAbillity()
         {
             int wLength = 230;
             int wSpeed = 5;
             float ratio = wLength / CalcTotalMoveAmount(wMousePos); // calcing ratio between mousepos and targetpos
-            // int totalMoveAmount = (int)(CalcTotalMoveAmount(mousePos) * ratio); // calculating total amount to move to reach target. (diagonal)
 
             int forMoveAmount = wLength / wSpeed; // amount to move every frame.
             Vector2 targetLocal = new Vector2((wMousePos.X - Position.X) * ratio, (wMousePos.Y - Position.Y) * ratio);
-            // Vector2 targetPos = new Vector2(bruh.X * ratio, bruh.Y * ratio);
 
             Vector2 mSpeed = GetMoveSpeed(targetLocal, forMoveAmount);
 
@@ -238,29 +261,38 @@ namespace NovemberProjekt.LoL2
 
         }
 
+        // e func
         public void eAbillity()
         {
             int eLength = 170;
             float ratio = eLength / CalcTotalMoveAmount(eMousePos); // calcing ratio between mousepos and targetpos
 
-            Vector2 bruh = new Vector2((eMousePos.X - Position.X) * ratio, (eMousePos.Y - Position.Y) * ratio);
+            Vector2 localLimit = new Vector2((eMousePos.X - Position.X) * ratio, (eMousePos.Y - Position.Y) * ratio); // local limit pos when position is 0,0
 
             if (eInProgress)
             {
-                Vector2 LimitPos = new Vector2(Position.X + bruh.X, Position.Y + bruh.Y);
-                if (CalcTotalMoveAmount(eMousePos) <= 170)
+                // Limit position for global
+                Vector2 LimitPos = new Vector2(Position.X + localLimit.X, Position.Y + localLimit.Y); 
+
+                // when mousepos is smaller than limit
+                if (CalcTotalMoveAmount(eMousePos) <= eLength)
                 {
+                    // move to position
                     Position = eMousePos;
                 }
-                else
+                else // move to limit
                 {
                     Position = LimitPos;
                 }
+
+                // stop move to progress
                 moveInProgress = false;
+
                 eInProgress = false;
             }
         }
 
+        // move function
         public void Moving(Vector2 mousePos)
         {
             int forMoveAmount = (int)CalcTotalMoveAmount(mousePos) / moveSpeed; // How many pixels it should move
@@ -279,6 +311,7 @@ namespace NovemberProjekt.LoL2
             }
         }
 
+        // gets how much to move per timeframe
         public Vector2 GetMoveSpeed(Vector2 targetPos, int forMoveAmount)
         {
             float mSpeedX = 0;
@@ -302,6 +335,7 @@ namespace NovemberProjekt.LoL2
             return new Vector2(pos.X - Position.X, pos.Y - Position.Y);
         }
 
+        // Getting the total amount to move
         public float CalcTotalMoveAmount(Vector2 targetPos)
         {
             Vector2 moveAmount = CalcMoveAmountXY(targetPos); // making vector2 based on Position being 0,0
@@ -310,27 +344,6 @@ namespace NovemberProjekt.LoL2
             return totalMoveAmount;
         }
 
-        bool CompVector2s(Vector2 pos1, Vector2 pos2)
-        {
-            bool x = false;
-            bool y = false;
-            if (pos1.X >= pos2.X - 2.5f && pos1.X <= pos2.X + 2.5f)
-            {
-                x = true;
-            }
-            if (pos1.Y >= pos2.Y - 2.5f && pos1.Y <= pos2.Y + 2.5f)
-            {
-                y = true;
-            }
 
-            if (x && y)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
     }
 }
