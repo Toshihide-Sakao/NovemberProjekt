@@ -29,13 +29,10 @@ namespace NovemberProjekt.LoL2
             int xBox = x + 20;
             int yBox = y + 20;
 
-            // Making cooldowns to a array
-            double[] abillityCDs = new double[] {champ.qCoolDownPassedTime, champ.wCoolDownPassedTime, champ.eCoolDownPassedTime};
-
             // Draw the boxes for the abillities and write cooldowns
             for (int i = 0; i < 3; i++)
             {
-                if (abillityCDs[i] <= 0)
+                if (champ.currentCooldowns[i] <= 0)
                 {
                     Raylib.DrawRectangle(xBox + 70 * i, yBox, 60, 60, boxReadyColor);
                 }
@@ -44,13 +41,13 @@ namespace NovemberProjekt.LoL2
                     Raylib.DrawRectangle(xBox + 70 * i, yBox, 60, 60, boxColor);
                 }
                 
-                if (abillityCDs[i] >= 1)
+                if (champ.currentCooldowns[i] >= 1)
                 {
-                    Raylib.DrawText(((int)(Math.Max(0, abillityCDs[i]))).ToString(), (xBox + 10) + 70 * i, yBox + 20, 30, Color.BLACK);
+                    Raylib.DrawText(((int)(Math.Max(0, champ.currentCooldowns[i]))).ToString(), (xBox + 10) + 70 * i, yBox + 20, 30, Color.BLACK);
                 }
-                else if (abillityCDs[i] > 0)
+                else if (champ.currentCooldowns[i] > 0)
                 {
-                    float cdOneDecimal =  (int)(10 * (Math.Max(0, abillityCDs[i]))) / 10.0f;
+                    float cdOneDecimal =  (int)(10 * (Math.Max(0, champ.currentCooldowns[i]))) / 10.0f;
                     Raylib.DrawText(cdOneDecimal.ToString(), (xBox + 10) + 70 * i, yBox + 20, 30, Color.BLACK);
                 }
                 

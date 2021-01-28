@@ -12,31 +12,36 @@ namespace NovemberProjekt.LoL2
         Vector2 moveMousePos = new Vector2();
 
         // Counters for projectile skills
-        int qLengthCounter = 1000000;
-        int wLengthCounter = 1000000;
+        int[] ProjectileCounter = new int[] { 1000000, 0, 1000000 };
+        // int qLengthCounter = 1000000;
+        // int wLengthCounter = 1000000;
 
         // Bool for if action is in progress
         bool moveInProgress = false;
 
         // Position for abillity
-        public Vector2 qPos;
-        public Vector2 wPos;
-        public Vector2 ePos;
+        public Vector2[] abillityPosses = new Vector2[3];
+        // public Vector2 qPos;
+        // public Vector2 wPos;
+        // public Vector2 ePos;
 
         // Cooldowns for abillities
-        float qCooldown = 3.3f;
-        float wCooldown = 5.0f;
-        float eCooldown = 9.0f;
+        float[] acutallCooldowns = new float[] { 3.3f, 5.0f, 9.0f };
+        // float qCooldown = 3.3f;
+        // float wCooldown = 5.0f;
+        // float eCooldown = 9.0f;
 
         // Time that resets every timeframe for each usage
         DateTime moveStart;
-        DateTime qTime;
-        DateTime wTime;
 
-        // Time for when the abillity was casted
-        DateTime qStart;
-        DateTime wStart;
-        DateTime eStart;
+        float[] abillityTimers = new float[3];
+        // float qTimer;
+        // DateTime wTime;
+
+        // Time for when the abillity was casted (NOT NEEDED ANYMORE)
+        // DateTime qStart;
+        // DateTime wStart;
+        // DateTime eStart;
 
         // REcord maxHP and max mana
         float maxHP;
@@ -51,25 +56,38 @@ namespace NovemberProjekt.LoL2
         DateTime recoverTime;
 
         // CD for abillities
-        public double qCoolDownPassedTime;
-        public double wCoolDownPassedTime;
-        public double eCoolDownPassedTime;
+        public float[] currentCooldowns = new float[3];
+        // public float qCoolDownPassedTime;
+        // public double wCoolDownPassedTime;
+        // public double eCoolDownPassedTime;
 
         // Mana cost for abillities
-        float qManaCost = 30f;
-        float wManaCost = 50f;
-        float eManaCost = 70f;
+        float[] manaCosts = new float[] { 30f, 50f, 70f };
+        // float qManaCost = 30f;
+        // float wManaCost = 50f;
+        // float eManaCost = 70f;
 
         // Progress
-        bool qInProgress = false;
-        bool wInProgress = false;
-        bool eInProgress = false;
+        bool[] inProgresses = new bool[3];
+        // bool qInProgress = false;
+        // bool wInProgress = false;
+        // bool eInProgress = false;
 
         // mouse position variables
-        Vector2 qMousePos = new Vector2();
-        Vector2 wMousePos = new Vector2();
-        Vector2 eMousePos = new Vector2();
-        Vector2 rMousePOs = new Vector2();
+        Vector2[] mousePosses = new Vector2[3];
+        // Vector2 qMousePos = new Vector2();
+        // Vector2 wMousePos = new Vector2();
+        // Vector2 eMousePos = new Vector2();
+        // Vector2 rMousePOs = new Vector2();
+
+        // Key inputs
+        KeyboardKey[] abillityKeys = new KeyboardKey[] {KeyboardKey.KEY_Q, KeyboardKey.KEY_W, KeyboardKey.KEY_E, KeyboardKey.KEY_R, KeyboardKey.KEY_D, KeyboardKey.KEY_F};
+        // KeyboardKey q = KeyboardKey.KEY_Q;
+        // KeyboardKey w = KeyboardKey.KEY_W;
+        // KeyboardKey e = KeyboardKey.KEY_E;
+        // KeyboardKey r = KeyboardKey.KEY_R;
+        // KeyboardKey d = KeyboardKey.KEY_D;
+        // KeyboardKey f = KeyboardKey.KEY_F;
 
 
         // Const
@@ -81,15 +99,20 @@ namespace NovemberProjekt.LoL2
             moveSpeed = 2;
 
             moveStart = DateTime.Now;
-            qStart = DateTime.Now;
-            wStart = DateTime.Now;
-            eStart = DateTime.Now;
+            // qStart = DateTime.Now;
+            // wStart = DateTime.Now;
+            // eStart = DateTime.Now;
             recoverTime = DateTime.Now;
 
             HP = 1000f;
 
             maxHP = HP;
             maxMana = mana;
+
+            for (int i = 0; i < acutallCooldowns.Length; i++)
+            {
+                currentCooldowns[i] = acutallCooldowns[i];
+            }
         }
 
         // This is the function that is placed in the game loop
@@ -116,57 +139,53 @@ namespace NovemberProjekt.LoL2
         public void Cast()
         {
             // Making the cooldowns go down to 0
-            qCoolDownPassedTime = qCooldown - (DateTime.Now - qStart).TotalSeconds;
-            wCoolDownPassedTime = wCooldown - (DateTime.Now - wStart).TotalSeconds;
-            eCoolDownPassedTime = eCooldown - (DateTime.Now - eStart).TotalSeconds;
+            for (int i = 0; i < acutallCooldowns.Length; i++)
+            {
+                currentCooldowns[i] -= Raylib.GetFrameTime();
+            }
 
-            // Key inputs
-            KeyboardKey q = KeyboardKey.KEY_Q;
-            KeyboardKey w = KeyboardKey.KEY_W;
-            KeyboardKey e = KeyboardKey.KEY_E;
-            KeyboardKey r = KeyboardKey.KEY_R;
-            KeyboardKey d = KeyboardKey.KEY_D;
-            KeyboardKey f = KeyboardKey.KEY_F;
+            for (int i = 0; i < 3; i++)
+            {
+                if (Raylib.IsKeyPressed(abillityKeys[i]) && inProgresses[i] == false && currentCooldowns[i] < 0)
+                {
+                    abillityTimers[i] = 0; // time which will reset every timeframe
+                    ProjectileCounter[i] = 0; // Counter for how many times it should move
+                    mousePosses[i] = Raylib.GetMousePosition(); // Record mousepos when q was pressed
+                    inProgresses[i] = true;
+                    abillityPosses[i] = Position; // Start position
 
+                    mana -= manaCosts[i]; // reduce mana
+                }
+            }
             // if q is pressed
-            if (Raylib.IsKeyPressed(q) && qInProgress == false && qCoolDownPassedTime < 0)
-            {
-                qStart = DateTime.Now; // start time 
-                qTime = DateTime.Now; // time which will reset every timeframe
-                qLengthCounter = 0; // Counter for how many times it should move
-                qMousePos = Raylib.GetMousePosition(); // Record mousepos when q was pressed
-                qInProgress = true;
-                qPos = Position; // Start position
 
-                mana -= qManaCost; // reduce mana
-            }
-            else if (Raylib.IsKeyPressed(w) && wInProgress == false && wCoolDownPassedTime < 0)
-            {
-                wStart = DateTime.Now;
-                wTime = DateTime.Now;
-                wLengthCounter = 0;
-                wMousePos = Raylib.GetMousePosition();
-                wInProgress = true;
-                wPos = Position;
+            // else if (Raylib.IsKeyPressed(w) && wInProgress == false && wCoolDownPassedTime < 0)
+            // {
+            //     wTime = DateTime.Now;
+            //     wLengthCounter = 0;
+            //     wMousePos = Raylib.GetMousePosition();
+            //     wInProgress = true;
+            //     wPos = Position;
 
-                mana -= wManaCost;
-            }
-            else if (Raylib.IsKeyPressed(e) && eCoolDownPassedTime < 0)
-            {
-                eStart = DateTime.Now;
-                eMousePos = Raylib.GetMousePosition();
-                eInProgress = true;
+            //     mana -= wManaCost;
+            // }
+            // else if (Raylib.IsKeyPressed(e) && eCoolDownPassedTime < 0)
+            // {
+            //     eStart = DateTime.Now;
+            //     eMousePos = Raylib.GetMousePosition();
+            //     eInProgress = true;
 
-                mana -= eManaCost;
-            }
-            else if (Raylib.IsKeyPressed(r))
-            {
+            //     mana -= eManaCost;
+            // }
+            // else if (Raylib.IsKeyPressed(r))
+            // {
 
-            }
-
-            wAbillity(wMousePos);
-            qAbillity(qMousePos);
-            eAbillity(eMousePos);
+            // }
+            
+            
+            wAbillity(mousePosses[1]);
+            qAbillity(mousePosses[0]);
+            eAbillity(mousePosses[2]);
         }
 
         // Recover func
@@ -200,35 +219,8 @@ namespace NovemberProjekt.LoL2
         {
             int qLength = 200; // length of q
             int qSpeed = 5; // speed of q
-            float ratio = qLength / CalcTotalMoveAmount(qMousePos); // calcing ratio between mousepos and targetpos
 
-            int forMoveAmount = qLength / qSpeed; // amount to move every frame.
-            Vector2 targetLocal = new Vector2((qMousePos.X - Position.X) * ratio, (qMousePos.Y - Position.Y) * ratio); // Target position but in local coordinates
-
-            Vector2 mSpeed = GetMoveSpeed(targetLocal, forMoveAmount); // amount to move x and y for every timeframe
-
-            // if q is in progress
-            if (qInProgress)
-            {
-                // timer for checking every timeframe
-                double qTimer = (DateTime.Now - qTime).TotalSeconds;
-                if (qTimer >= 0.008f && qLengthCounter <= forMoveAmount)
-                {
-                    // move position for one timeframe
-                    qPos.X += mSpeed.X;
-                    qPos.Y += mSpeed.Y;
-
-                    qTime = DateTime.Now; // recording new datetime
-                    qLengthCounter++; // adding to counter
-                }
-                if (qLengthCounter > forMoveAmount)
-                {
-                    qInProgress = false; // stop when counter has reached formoveamount
-                }
-
-                // draw projectile while q is in progress
-                Raylib.DrawCircle((int)qPos.X, (int)qPos.Y, 10, Color.RED);
-            }
+            ProjectileAbillity(qLength, qSpeed, 0, Color.RED);
         }
 
         // W func
@@ -236,54 +228,69 @@ namespace NovemberProjekt.LoL2
         {
             int wLength = 230;
             int wSpeed = 5;
-            float ratio = wLength / CalcTotalMoveAmount(wMousePos); // calcing ratio between mousepos and targetpos
 
-            int forMoveAmount = wLength / wSpeed; // amount to move every frame.
-            Vector2 targetLocal = new Vector2((wMousePos.X - Position.X) * ratio, (wMousePos.Y - Position.Y) * ratio);
-
-            Vector2 mSpeed = GetMoveSpeed(targetLocal, forMoveAmount);
-
-            if (wInProgress)
-            {
-                double wTimer = (DateTime.Now - wTime).TotalSeconds;
-                if (wTimer >= 0.008f && wLengthCounter <= forMoveAmount)
-                {
-                    wPos.X += mSpeed.X;
-                    wPos.Y += mSpeed.Y;
-                    wTime = DateTime.Now;
-
-                    wLengthCounter++;
-                }
-
-                if (wLengthCounter >= forMoveAmount)
-                {
-                    wPos = Position;
-                    wInProgress = false;
-                }
-
-                Raylib.DrawCircle((int)wPos.X, (int)wPos.Y, 15, Color.GRAY);
-            }
-
+            ProjectileAbillity(wLength, wSpeed, 1, Color.GRAY);
         }
 
-        // e func
+        // // e func
         public void eAbillity(Vector2 eMousePos)
         {
             int eLength = 170;
-            float ratio = eLength / CalcTotalMoveAmount(eMousePos); // calcing ratio between mousepos and targetpos
+            
+            BlinkAbillity(eLength, 2);
+        }
 
-            Vector2 localLimit = new Vector2((eMousePos.X - Position.X) * ratio, (eMousePos.Y - Position.Y) * ratio); // local limit pos when position is 0,0
+        void ProjectileAbillity(int length, int speed, int abillity, Color color)
+        {
+            float ratio = length / CalcTotalMoveAmount(mousePosses[abillity]); // calcing ratio between mousepos and targetpos
 
-            if (eInProgress)
+            int forMoveAmount = length / speed; // amount to move every frame.
+            Vector2 targetLocal = new Vector2((mousePosses[abillity].X - Position.X) * ratio, (mousePosses[abillity].Y - Position.Y) * ratio); // Target position but in local coordinates
+
+            Vector2 mSpeed = GetMoveSpeed(targetLocal, forMoveAmount); // amount to move x and y for every timeframe
+
+            // if q is in progress
+            if (inProgresses[abillity])
+            {
+                System.Console.WriteLine(abillityTimers[abillity]);
+                // timer for checking every timeframe
+                abillityTimers[abillity] += Raylib.GetFrameTime();
+                if (abillityTimers[abillity] >= 0.01f && ProjectileCounter[abillity] <= forMoveAmount)
+                {
+                    // move position for one timeframe
+                    abillityPosses[abillity].X += mSpeed.X;
+                    abillityPosses[abillity].Y += mSpeed.Y;
+
+                    abillityTimers[abillity] = 0; // recording new datetime
+                    ProjectileCounter[abillity]++; // adding to counter
+                }
+                // draw projectile while q is in progress
+                Raylib.DrawCircle((int)abillityPosses[abillity].X, (int)abillityPosses[abillity].Y, 10, color);
+
+                if (ProjectileCounter[abillity] > forMoveAmount)
+                {
+                    inProgresses[abillity] = false; // stop when counter has reached formoveamount
+                    currentCooldowns[abillity] = acutallCooldowns[abillity];
+                }
+            }
+        }
+
+        void BlinkAbillity(int length, int abillity)
+        {
+            float ratio = length / CalcTotalMoveAmount(mousePosses[abillity]); // calcing ratio between mousepos and targetpos
+
+            Vector2 localLimit = new Vector2((mousePosses[abillity].X - Position.X) * ratio, (mousePosses[abillity].Y - Position.Y) * ratio); // local limit pos when position is 0,0
+
+            if (inProgresses[abillity])
             {
                 // Limit position for global
                 Vector2 LimitPos = new Vector2(Position.X + localLimit.X, Position.Y + localLimit.Y);
 
                 // when mousepos is smaller than limit
-                if (CalcTotalMoveAmount(eMousePos) <= eLength)
+                if (CalcTotalMoveAmount(mousePosses[abillity]) <= length)
                 {
                     // move to position
-                    Position = eMousePos;
+                    Position = mousePosses[abillity];
                 }
                 else // move to limit
                 {
@@ -293,9 +300,15 @@ namespace NovemberProjekt.LoL2
                 // stop move to progress
                 moveInProgress = false;
 
-                eInProgress = false;
+                inProgresses[abillity] = false;
+                currentCooldowns[abillity] = acutallCooldowns[abillity];
             }
         }
+
+        // void ResetCoolDown(int abillity)
+        // {
+
+        // }
 
         // move function
         public void Moving(Vector2 mousePos)
@@ -348,7 +361,5 @@ namespace NovemberProjekt.LoL2
 
             return totalMoveAmount;
         }
-
-
     }
 }
