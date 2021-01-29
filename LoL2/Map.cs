@@ -36,7 +36,14 @@ namespace NovemberProjekt.LoL2
 
         void drawCharacter(Character guy)
         {
-            Raylib.DrawCircle((int)guy.Position.X, (int)guy.Position.Y, 20, guy.graphic);
+            if (guy.HP <= 0)
+            {
+                Raylib.DrawCircle((int)guy.Position.X, (int)guy.Position.Y, guy.size, new Color(217, 217, 217, 255));
+            }
+            else
+            {
+                Raylib.DrawCircle((int)guy.Position.X, (int)guy.Position.Y, guy.size, guy.graphic);
+            }
             guy.Inputs();
         }
         

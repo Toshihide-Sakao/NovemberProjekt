@@ -15,19 +15,26 @@ namespace NovemberProjekt.LoL2
 		public float HP { get; set; } // Character HP
 		public Vector2 Position; // Character position
 		public Color graphic; // Color for character
+		public int size;
+		public int team;
+		public int[] abillityDamages = new int[0];
 		
 		public static List<Character> list = new List<Character>(); // List for all characters
 
 		// Constructor for Charachter
 		public Character()
 		{
-			graphic = new Color(222, 224, 92, 255); // Deciding color for character
 			list.Add(this); // adding char to list
 		}
 
 		public virtual void Inputs()
 		{
 
+		}
+
+		public virtual string CheckDerived()
+		{
+			return "Character";
 		}
 	}
 }

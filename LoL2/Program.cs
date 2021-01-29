@@ -11,7 +11,10 @@ namespace NovemberProjekt.LoL2
             Map aram = new Map();
 
             // Gen new champ
-            Champion ezreal = new Champion();
+            Champion ezreal = new Champion(new Color(222, 224, 92, 255), 20, 0);
+
+            // spawn one melee minion
+            Melee test1 = new Melee(new Color(201, 27, 14, 255), 15, 1);
             
             // initialize window
             Raylib.InitWindow(aram.xMax, aram.yMax, "Bruh of Bruhhhhhhing");
@@ -29,6 +32,9 @@ namespace NovemberProjekt.LoL2
                 
                 // draw characters
                 aram.Draw(Character.list);
+
+                // Dectects damage and stuff
+                Detector.Detect();
 
                 // update UI
                 ezUI.update();

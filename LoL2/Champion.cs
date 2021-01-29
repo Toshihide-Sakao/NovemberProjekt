@@ -12,36 +12,24 @@ namespace NovemberProjekt.LoL2
         Vector2 moveMousePos = new Vector2();
 
         // Counters for projectile skills
-        int[] ProjectileCounter = new int[] { 1000000, 0, 1000000 };
-        // int qLengthCounter = 1000000;
-        // int wLengthCounter = 1000000;
+        int[] ProjectileCounter = new int[3];
+
+        // Projectile size
+        public int[] ProjectileSize = new int[3];
 
         // Bool for if action is in progress
         bool moveInProgress = false;
 
         // Position for abillity
         public Vector2[] abillityPosses = new Vector2[3];
-        // public Vector2 qPos;
-        // public Vector2 wPos;
-        // public Vector2 ePos;
 
         // Cooldowns for abillities
         float[] acutallCooldowns = new float[] { 3.3f, 5.0f, 9.0f };
-        // float qCooldown = 3.3f;
-        // float wCooldown = 5.0f;
-        // float eCooldown = 9.0f;
 
         // Time that resets every timeframe for each usage
-        DateTime moveStart;
+        float moveTimer;
 
         float[] abillityTimers = new float[3];
-        // float qTimer;
-        // DateTime wTime;
-
-        // Time for when the abillity was casted (NOT NEEDED ANYMORE)
-        // DateTime qStart;
-        // DateTime wStart;
-        // DateTime eStart;
 
         // REcord maxHP and max mana
         float maxHP;
@@ -57,51 +45,34 @@ namespace NovemberProjekt.LoL2
 
         // CD for abillities
         public float[] currentCooldowns = new float[3];
-        // public float qCoolDownPassedTime;
-        // public double wCoolDownPassedTime;
-        // public double eCoolDownPassedTime;
 
         // Mana cost for abillities
         float[] manaCosts = new float[] { 30f, 50f, 70f };
-        // float qManaCost = 30f;
-        // float wManaCost = 50f;
-        // float eManaCost = 70f;
 
         // Progress
-        bool[] inProgresses = new bool[3];
-        // bool qInProgress = false;
-        // bool wInProgress = false;
-        // bool eInProgress = false;
+        public bool[] inProgresses = new bool[3];
 
         // mouse position variables
         Vector2[] mousePosses = new Vector2[3];
-        // Vector2 qMousePos = new Vector2();
-        // Vector2 wMousePos = new Vector2();
-        // Vector2 eMousePos = new Vector2();
-        // Vector2 rMousePOs = new Vector2();
 
         // Key inputs
         KeyboardKey[] abillityKeys = new KeyboardKey[] {KeyboardKey.KEY_Q, KeyboardKey.KEY_W, KeyboardKey.KEY_E, KeyboardKey.KEY_R, KeyboardKey.KEY_D, KeyboardKey.KEY_F};
-        // KeyboardKey q = KeyboardKey.KEY_Q;
-        // KeyboardKey w = KeyboardKey.KEY_W;
-        // KeyboardKey e = KeyboardKey.KEY_E;
-        // KeyboardKey r = KeyboardKey.KEY_R;
-        // KeyboardKey d = KeyboardKey.KEY_D;
-        // KeyboardKey f = KeyboardKey.KEY_F;
-
 
         // Const
-        public Champion()
+        public Champion(Color graphic, int size, int team)
         {
+            this.graphic = graphic;
+            this.size = size;
+            this.team = team;
+
+            // abillity damages
+            abillityDamages = new int[3];
+
             spawnPos = new Vector2(100, 400);
             Position = spawnPos;
 
             moveSpeed = 2;
 
-            moveStart = DateTime.Now;
-            // qStart = DateTime.Now;
-            // wStart = DateTime.Now;
-            // eStart = DateTime.Now;
             recoverTime = DateTime.Now;
 
             HP = 1000f;
@@ -128,7 +99,7 @@ namespace NovemberProjekt.LoL2
         {
             if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_RIGHT_BUTTON))
             {
-                moveStart = DateTime.Now;
+                moveTimer = 0;
                 moveMousePos = Raylib.GetMousePosition();
                 moveInProgress = true;
             }
@@ -143,7 +114,8 @@ namespace NovemberProjekt.LoL2
             {
                 currentCooldowns[i] -= Raylib.GetFrameTime();
             }
-
+            
+            // checking if keys were pressed
             for (int i = 0; i < 3; i++)
             {
                 if (Raylib.IsKeyPressed(abillityKeys[i]) && inProgresses[i] == false && currentCooldowns[i] < 0)
@@ -157,32 +129,8 @@ namespace NovemberProjekt.LoL2
                     mana -= manaCosts[i]; // reduce mana
                 }
             }
-            // if q is pressed
-
-            // else if (Raylib.IsKeyPressed(w) && wInProgress == false && wCoolDownPassedTime < 0)
-            // {
-            //     wTime = DateTime.Now;
-            //     wLengthCounter = 0;
-            //     wMousePos = Raylib.GetMousePosition();
-            //     wInProgress = true;
-            //     wPos = Position;
-
-            //     mana -= wManaCost;
-            // }
-            // else if (Raylib.IsKeyPressed(e) && eCoolDownPassedTime < 0)
-            // {
-            //     eStart = DateTime.Now;
-            //     eMousePos = Raylib.GetMousePosition();
-            //     eInProgress = true;
-
-            //     mana -= eManaCost;
-            // }
-            // else if (Raylib.IsKeyPressed(r))
-            // {
-
-            // }
             
-            
+            // abillity caster functions
             wAbillity(mousePosses[1]);
             qAbillity(mousePosses[0]);
             eAbillity(mousePosses[2]);
@@ -219,6 +167,8 @@ namespace NovemberProjekt.LoL2
         {
             int qLength = 200; // length of q
             int qSpeed = 5; // speed of q
+            ProjectileSize[0] = 16;
+            abillityDamages[0] = 70;
 
             ProjectileAbillity(qLength, qSpeed, 0, Color.RED);
         }
@@ -228,6 +178,8 @@ namespace NovemberProjekt.LoL2
         {
             int wLength = 230;
             int wSpeed = 5;
+            ProjectileSize[1] = 22;
+            abillityDamages[1] = 0;
 
             ProjectileAbillity(wLength, wSpeed, 1, Color.GRAY);
         }
@@ -236,6 +188,7 @@ namespace NovemberProjekt.LoL2
         public void eAbillity(Vector2 eMousePos)
         {
             int eLength = 170;
+            abillityDamages[2] = 0;
             
             BlinkAbillity(eLength, 2);
         }
@@ -265,7 +218,7 @@ namespace NovemberProjekt.LoL2
                     ProjectileCounter[abillity]++; // adding to counter
                 }
                 // draw projectile while q is in progress
-                Raylib.DrawCircle((int)abillityPosses[abillity].X, (int)abillityPosses[abillity].Y, 10, color);
+                Raylib.DrawCircle((int)abillityPosses[abillity].X, (int)abillityPosses[abillity].Y, ProjectileSize[abillity], color);
 
                 if (ProjectileCounter[abillity] > forMoveAmount)
                 {
@@ -318,13 +271,13 @@ namespace NovemberProjekt.LoL2
 
             if (moveInProgress)
             {
-                double moveTimer = (DateTime.Now - moveStart).TotalSeconds;
+                moveTimer += Raylib.GetFrameTime();
                 if (moveTimer >= 0.01f)
                 {
                     Position.X += mSpeed.X;
                     Position.Y += mSpeed.Y;
 
-                    moveStart = DateTime.Now;
+                    moveTimer = 0;
                 }
             }
         }
@@ -360,6 +313,11 @@ namespace NovemberProjekt.LoL2
             float totalMoveAmount = (float)Math.Sqrt((Math.Pow(moveAmount.X, 2) + Math.Pow(moveAmount.Y, 2)));
 
             return totalMoveAmount;
+        }
+
+        public override string CheckDerived()
+        {
+            return "Champion";
         }
     }
 }
